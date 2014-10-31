@@ -1,0 +1,47 @@
+description = 'bench-mllib'
+apply plugin: 'scala'
+
+version = '0.1'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url "https://repository.cloudera.com/artifactory/cloudera-repos"
+    }
+}
+
+dependencies {
+    compile 'org.apache.spark:spark-core_2.10:1.1.0'
+    compile 'org.apache.spark:spark-mllib_2.10:1.1.0'
+    compile 'com.github.fommil.netlib:all:1.1.2'
+    //compile 'com.googlecode.netlib-java:netlib-java:1.1'
+    //compile 'org.jblas:jblas:1.2.3'
+    //compile 'org.scalanlp:breeze_2.10:0.10'
+    //compile group: 'com.github.scopt', name: 'scopt_2.10', version: '3.2.0'
+    //compile group: 'com.typesafe', name:'config', version:'1.2.1'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task distJars(dependsOn: 'distConf', type: Copy) {
+    from configurations.runtime
+    from jar
+    include "bench-mllib*.jar"
+    include "config*.jar"
+    include "*netlib*.jar"
+    //include "*jblas*.jar"
+    into "${buildDir}/dist/lib"
+}
+
+task distConf(dependsOn: 'assemble', type: Copy) {
+    from "src/main/recources"
+    include "log4j.properties"
+    include "application.conf"
+    into "${buildDir}/dist/conf"
+}
+
+task dist(dependsOn: 'distJars', type: Copy) {
+    from "src/main/resources"
+    include "dga-yarn-mllib"
+    into "${buildDir}/dist"
+}

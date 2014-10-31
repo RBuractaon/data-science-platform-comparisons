@@ -1,5 +1,26 @@
+# Ignore Gradle Files
 .gradle
 build/
-
-# Ignore Gradle GUI config
 gradle-app.setting
+gradle/
+.gradle/
+
+# Ignore CLasses
+*.class
+.DS_Store
+# Package Files #
+*.war
+*.ear
+classes/
+
+# Ignore IntelliJ Files
+*.iml
+build
+.idea
+out
+target/*
+
+
+# Others
+example.log*
+_site/

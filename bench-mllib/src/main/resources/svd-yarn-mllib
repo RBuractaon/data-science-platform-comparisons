@@ -1,0 +1,13 @@
+#! /bin/bash
+
+for i in `ls -d /opt/spark/lib_managed/jars/*`;
+do
+    export JARS="$JARS,$i"
+done
+
+T="$(date +%s)"
+#spark-submit --executor-cores 8 --num-executors 14 --executor-memory 40G --class com.soteradefense.benchmarks.mllib.svd.SparseSVD --master yarn-cluster --jars "lib/bench-mllib-0.0.1.jar,lib/config-1.2.1.jar$JARS" lib/bench-mllib-0.1.jar "$@"
+spark-submit --driver-memory 124G --executor-cores 8 --num-executors 14 --executor-memory 100G --master yarn-cluster --jars "lib/bench-mllib-0.1.jar,lib/config-1.2.1.jar$JARS" --files log4j.properties --class com.soteradefense.benchmarks.mllib.svd.SparseSVD lib/bench-mllib-0.1.jar "$@"
+#benchmarks/svd_inputs/hdfs_A_100k_10k.csv 1344 benchmarks/svd_results/A_100k_10k_dense_p1344 10000 1e-8
+T="$(($(date +%s)-T))"
+echo "Time in seconds: ${T}"
